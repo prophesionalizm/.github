@@ -1,0 +1,26 @@
+# ---------------------------------------------------------------------------
+# Copy this file to your repo's .github/workflows/build.yml
+# Replace "my-image-name" with your actual image name.
+# Requires: Dockerfile in repo root (or set dockerfile/context inputs)
+# Result:   ghcr.io/prophesionalizm/<image_name>:<tag>
+# ---------------------------------------------------------------------------
+name: Build and Push Image
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: prophesionalizm/.github/.github/workflows/docker-build-push.yml@main
+    with:
+      image_name: my-image-name        # <-- change this
+      # dockerfile: ./Dockerfile       # optional, default: ./Dockerfile
+      # context: .                     # optional, default: .
+      # platforms: linux/amd64         # optional, add linux/arm64 for multi-arch
+      push: ${{ github.event_name != 'pull_request' }}   # dry-run on PRs
+    secrets: inherit
